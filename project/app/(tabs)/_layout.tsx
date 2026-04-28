@@ -27,7 +27,7 @@ export default function TabLayout() {
             Air Quality
           </ThemedText>
 
-          <Link href="/(tabs)/data" asChild>
+          <Link href="/data" asChild>
             <Pressable
               style={{
                 ...styles.sidebarItem,
@@ -49,7 +49,7 @@ export default function TabLayout() {
             </Pressable>
           </Link>
 
-          <Link href="/(tabs)/graph" asChild>
+          <Link href="/graph" asChild>
             <Pressable
               style={{
                 ...styles.sidebarItem,
