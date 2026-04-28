@@ -1,10 +1,12 @@
 import React from 'react';
 import { Tabs, Link, usePathname } from 'expo-router';
-import { useWindowDimensions, View, StyleSheet, Pressable } from 'react-native';
+import { useWindowDimensions, View, StyleSheet, Pressable, Image } from 'react-native';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { AntDesign } from '@expo/vector-icons';
+import Feather from '@expo/vector-icons/Feather';
 
 export default function TabLayout() {
   const { width } = useWindowDimensions();
@@ -24,6 +26,10 @@ export default function TabLayout() {
           }}
         >
           <ThemedText type="defaultSemiBold" style={styles.sidebarLogo}>
+            <Image
+              source={require('@/assets/images/bu-removebg-preview.png')}
+              style={{ width: 24, height: 24 }}
+            />
             Air Quality
           </ThemedText>
 
@@ -34,8 +40,9 @@ export default function TabLayout() {
                 ...(isActive('data') ? styles.activeItem : {}),
               }}
             >
-              <IconSymbol
-                name="house.fill"
+              <AntDesign
+                name="info-circle"
+                size={20}
                 color={isActive('data') ? '#007AFF' : (colorScheme === 'dark' ? '#fff' : '#3b3b3b')}
               />
               <ThemedText
@@ -56,8 +63,9 @@ export default function TabLayout() {
                 ...(isActive('graph') ? styles.activeItem : {}),
               }}
             >
-              <IconSymbol
-                name="paperplane.fill"
+              <AntDesign
+                name="line-chart"
+                size={20}
                 color={isActive('graph') ? '#007AFF' : (colorScheme === 'dark' ? '#fff' : '#3b3b3b')}
               />
               <ThemedText
@@ -67,6 +75,29 @@ export default function TabLayout() {
                 }}
               >
                 Graph
+              </ThemedText>
+            </Pressable>
+          </Link>
+
+          <Link href="/setting" asChild>
+            <Pressable
+              style={{
+                ...styles.sidebarItem,
+                ...(isActive('setting') ? styles.activeItem : {}),
+              }}
+            >
+              <Feather
+                name="settings"
+                size={20}
+                color={isActive('setting') ? '#007AFF' : (colorScheme === 'dark' ? '#fff' : '#3b3b3b')}
+              />
+              <ThemedText
+                style={{
+                  color: isActive('setting') ? '#007AFF' : (colorScheme === 'dark' ? '#fff' : '#3b3b3b'),
+                  ...(isActive('setting') ? styles.activeText : {}),
+                }}
+              >
+                Settings
               </ThemedText>
             </Pressable>
           </Link>
@@ -81,6 +112,7 @@ export default function TabLayout() {
           >
             <Tabs.Screen name="data" />
             <Tabs.Screen name="graph" />
+            <Tabs.Screen name="setting" />
           </Tabs>
         </View>
       </ThemedView>
@@ -91,21 +123,62 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerShown: false,
+        headerShown: true,
+        headerTitleAlign: 'center',
         tabBarActiveTintColor: '#007AFF',
       }}>
       <Tabs.Screen
         name="data"
         options={{
           title: 'Data',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          headerTitle: () => (
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+              <Image
+                source={require('@/assets/images/bu-removebg-preview.png')}
+                style={{ width: 24, height: 24 }}
+              />
+              <ThemedText style={{ color: '#000000', fontWeight: 'bold' }}>Air</ThemedText>
+              <ThemedText style={{ color: '#FF6984', fontWeight: 'bold' }}>Quality</ThemedText>
+            </View>
+          ),
+          headerTitleAlign: 'center',
+          tabBarIcon: ({ color }) => <AntDesign name="info-circle" size={28} color={color} />,
         }}
       />
       <Tabs.Screen
         name="graph"
         options={{
           title: 'Graph',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          headerTitle: () => (
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+              <Image
+                source={require('@/assets/images/bu-removebg-preview.png')}
+                style={{ width: 24, height: 24 }}
+              />
+              <ThemedText style={{ color: '#000000', fontWeight: 'bold' }}>Air</ThemedText>
+              <ThemedText style={{ color: '#FF6984', fontWeight: 'bold' }}>Quality</ThemedText>
+            </View>
+          ),
+          headerTitleAlign: 'center',
+          tabBarIcon: ({ color }) => <AntDesign name="bar-chart" size={28} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="setting"
+        options={{
+          title: 'Settings',
+          headerTitle: () => (
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+              <Image
+                source={require('@/assets/images/bu-removebg-preview.png')}
+                style={{ width: 24, height: 24 }}
+              />
+              <ThemedText style={{ color: '#000000', fontWeight: 'bold' }}>Air</ThemedText>
+              <ThemedText style={{ color: '#FF6984', fontWeight: 'bold' }}>Quality</ThemedText>
+            </View>
+          ),
+          headerTitleAlign: 'center',
+          tabBarIcon: ({ color }) => <Feather name="settings" size={28} color={color} />,
         }}
       />
     </Tabs>
