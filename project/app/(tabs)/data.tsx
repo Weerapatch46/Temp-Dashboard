@@ -10,7 +10,7 @@ import { Link } from 'expo-router';
 export default function HomeScreen() {
   return (
         <ThemedText type="title" style={styles.titleContainer}>
-          Air Quality Dashboard
+          Air Quality Dashboard test 2
         </ThemedText>
   );
 }
