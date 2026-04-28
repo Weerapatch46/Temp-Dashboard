@@ -1,7 +1,7 @@
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import { ThemedText } from '@/components/themed-text';
 
-export default function GraphScreen() {
+export default function SettingScreen() {
   const { width } = useWindowDimensions();
   const isDesktop = width >= 768;
 
@@ -9,11 +9,11 @@ export default function GraphScreen() {
     <View style={styles.container}>
       {isDesktop ? (
         <ThemedText type="title" style={styles.titleContainerDesktop}>
-          Content Graph for Desktop
+          Content Setting for Desktop
         </ThemedText>
       ) : (
         <ThemedText type="title" style={styles.titleContainerMobile}>
-          Content Graph for Mobile
+          Content Setting for Mobile
         </ThemedText>
       )}
     </View>
