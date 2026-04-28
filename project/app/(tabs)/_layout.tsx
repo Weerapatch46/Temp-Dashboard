@@ -28,9 +28,10 @@ export default function TabLayout() {
           <ThemedText type="defaultSemiBold" style={styles.sidebarLogo}>
             <Image
               source={require('@/assets/images/bu-removebg-preview.png')}
-              style={{ width: 24, height: 24 }}
+              style={{ width: 40, height: 24 }}
             />
-            Air Quality
+            <ThemedText style={{ color: colorScheme === 'dark' ? '#ffffff' : '#000000', fontWeight: 'bold' }}>Air </ThemedText>
+            <ThemedText style={{ color: '#FF6984', fontWeight: 'bold' }}>Quality</ThemedText>
           </ThemedText>
 
           <Link href="/data" asChild>
@@ -137,7 +138,7 @@ export default function TabLayout() {
                 source={require('@/assets/images/bu-removebg-preview.png')}
                 style={{ width: 24, height: 24 }}
               />
-              <ThemedText style={{ color: '#000000', fontWeight: 'bold' }}>Air</ThemedText>
+              <ThemedText style={{ color: colorScheme === 'dark' ? '#ffffff' : '#000000', fontWeight: 'bold' }}>Air</ThemedText>
               <ThemedText style={{ color: '#FF6984', fontWeight: 'bold' }}>Quality</ThemedText>
             </View>
           ),
@@ -155,7 +156,7 @@ export default function TabLayout() {
                 source={require('@/assets/images/bu-removebg-preview.png')}
                 style={{ width: 24, height: 24 }}
               />
-              <ThemedText style={{ color: '#000000', fontWeight: 'bold' }}>Air</ThemedText>
+              <ThemedText style={{ color: colorScheme === 'dark' ? '#ffffff' : '#000000', fontWeight: 'bold' }}>Air</ThemedText>
               <ThemedText style={{ color: '#FF6984', fontWeight: 'bold' }}>Quality</ThemedText>
             </View>
           ),
@@ -173,7 +174,7 @@ export default function TabLayout() {
                 source={require('@/assets/images/bu-removebg-preview.png')}
                 style={{ width: 24, height: 24 }}
               />
-              <ThemedText style={{ color: '#000000', fontWeight: 'bold' }}>Air</ThemedText>
+              <ThemedText style={{ color: colorScheme === 'dark' ? '#ffffff' : '#000000', fontWeight: 'bold' }}>Air</ThemedText>
               <ThemedText style={{ color: '#FF6984', fontWeight: 'bold' }}>Quality</ThemedText>
             </View>
           ),
