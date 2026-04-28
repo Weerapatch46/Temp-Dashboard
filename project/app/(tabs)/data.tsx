@@ -107,7 +107,7 @@ export default function HomeScreen() {
                   source={require('@/assets/images/carbon-dioxide.png')}
                   style={{ width: 24, height: 24 }}
                 />
-                <ThemedText style={styles.menuMobileTitle}>Cabon Dioxide</ThemedText>
+                <ThemedText style={styles.menuMobileTitle}>Carbon Dioxide</ThemedText>
               </View>
               <AntDesign
                 name={isOpenCarbon ? 'up' : 'down'}
