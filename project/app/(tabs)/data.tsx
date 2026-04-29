@@ -18,7 +18,7 @@ export default function HomeScreen() {
   const [isOpenNitrogenDioxide, setIsOpenNitrogenDioxide] = React.useState(false);
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={[styles.container, { backgroundColor: colorScheme === 'dark' ? '#1c1e1f' : '#f5f5f5' }]}>
       {isDesktop ? (
         <View style={{ flex: 1 }}>
 
@@ -336,7 +336,9 @@ export default function HomeScreen() {
       ) : (
         <>
           {/* Temperature */}
-          <View style={[styles.menuMobile, { marginTop: 10 }]}>
+          <View style={[styles.menuMobile,
+          { marginTop: 10, backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff', borderColor: colorScheme === 'dark' ? '#555555' : '#d9d9d9' }
+          ]}>
             <TouchableOpacity
               style={styles.menuMobileButton}
               onPress={() => setIsOpenTemperature(!isOpenTemperature)}
@@ -352,7 +354,7 @@ export default function HomeScreen() {
               <AntDesign
                 name={isOpenTemperature ? 'up' : 'down'}
                 size={16}
-                color="#3b3b3b"
+                color="#858585"
               />
             </TouchableOpacity>
             {isOpenTemperature && (
@@ -370,7 +372,9 @@ export default function HomeScreen() {
           </View>
 
           {/* Pressure */}
-          <View style={[styles.menuMobile, { marginTop: 10 }]}>
+          <View style={[styles.menuMobile,
+          { marginTop: 10, backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff', borderColor: colorScheme === 'dark' ? '#555555' : '#d9d9d9' }
+          ]}>
             <TouchableOpacity
               style={styles.menuMobileButton}
               onPress={() => setIsOpenPressure(!isOpenPressure)}
@@ -386,7 +390,7 @@ export default function HomeScreen() {
               <AntDesign
                 name={isOpenPressure ? 'up' : 'down'}
                 size={16}
-                color="#3b3b3b"
+                color="#858585"
               />
             </TouchableOpacity>
             {isOpenPressure && (
@@ -407,7 +411,9 @@ export default function HomeScreen() {
           </View>
 
           {/* Carbon Dioxide */}
-          <View style={[styles.menuMobile, { marginTop: 10 }]}>
+          <View style={[styles.menuMobile,
+          { marginTop: 10, backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff', borderColor: colorScheme === 'dark' ? '#555555' : '#d9d9d9' }
+          ]}>
             <TouchableOpacity
               style={styles.menuMobileButton}
               onPress={() => setIsOpenCarbon(!isOpenCarbon)}
@@ -423,7 +429,7 @@ export default function HomeScreen() {
               <AntDesign
                 name={isOpenCarbon ? 'up' : 'down'}
                 size={16}
-                color="#3b3b3b"
+                color="#858585"
               />
             </TouchableOpacity>
             {isOpenCarbon && (
@@ -444,7 +450,9 @@ export default function HomeScreen() {
           </View>
 
           {/* Methane */}
-          <View style={styles.menuMobile}>
+          <View style={[styles.menuMobile,
+          { marginTop: 10, backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff', borderColor: colorScheme === 'dark' ? '#555555' : '#d9d9d9' }
+          ]}>
             <TouchableOpacity
               style={styles.menuMobileButton}
               onPress={() => setIsOpenMethane(!isOpenMethane)}
@@ -460,7 +468,7 @@ export default function HomeScreen() {
               <AntDesign
                 name={isOpenMethane ? 'up' : 'down'}
                 size={16}
-                color="#3b3b3b"
+                color="#858585"
               />
             </TouchableOpacity>
             {isOpenMethane && (
@@ -481,7 +489,9 @@ export default function HomeScreen() {
           </View>
 
           {/* Ethanol */}
-          <View style={styles.menuMobile}>
+          <View style={[styles.menuMobile,
+          { marginTop: 10, backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff', borderColor: colorScheme === 'dark' ? '#555555' : '#d9d9d9' }
+          ]}>
             <TouchableOpacity
               style={styles.menuMobileButton}
               onPress={() => setIsOpenEthanol(!isOpenEthanol)}
@@ -497,7 +507,7 @@ export default function HomeScreen() {
               <AntDesign
                 name={isOpenEthanol ? 'up' : 'down'}
                 size={16}
-                color="#3b3b3b"
+                color="#858585"
               />
             </TouchableOpacity>
             {isOpenEthanol && (
@@ -518,7 +528,9 @@ export default function HomeScreen() {
           </View>
 
           {/* Nitrogen */}
-          <View style={styles.menuMobile}>
+          <View style={[styles.menuMobile,
+          { marginTop: 10, backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff', borderColor: colorScheme === 'dark' ? '#555555' : '#d9d9d9' }
+          ]}>
             <TouchableOpacity
               style={styles.menuMobileButton}
               onPress={() => setIsOpenNitrogen(!isOpenNitrogen)}
@@ -534,7 +546,7 @@ export default function HomeScreen() {
               <AntDesign
                 name={isOpenNitrogen ? 'up' : 'down'}
                 size={16}
-                color="#3b3b3b"
+                color="#858585"
               />
             </TouchableOpacity>
             {isOpenNitrogen && (
@@ -555,7 +567,9 @@ export default function HomeScreen() {
           </View>
 
           {/* Ammonia */}
-          <View style={styles.menuMobile}>
+          <View style={[styles.menuMobile,
+          { marginTop: 10, backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff', borderColor: colorScheme === 'dark' ? '#555555' : '#d9d9d9' }
+          ]}>
             <TouchableOpacity
               style={styles.menuMobileButton}
               onPress={() => setIsOpenAmmonia(!isOpenAmmonia)}
@@ -571,7 +585,7 @@ export default function HomeScreen() {
               <AntDesign
                 name={isOpenAmmonia ? 'up' : 'down'}
                 size={16}
-                color="#3b3b3b"
+                color="#858585"
               />
             </TouchableOpacity>
             {isOpenAmmonia && (
@@ -592,7 +606,9 @@ export default function HomeScreen() {
           </View>
 
           {/* Nitrogen Dioxide */}
-          <View style={styles.menuMobile}>
+          <View style={[styles.menuMobile,
+          { marginTop: 10, backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff', borderColor: colorScheme === 'dark' ? '#555555' : '#d9d9d9' }
+          ]}>
             <TouchableOpacity
               style={styles.menuMobileButton}
               onPress={() => setIsOpenNitrogenDioxide(!isOpenNitrogenDioxide)}
@@ -608,7 +624,7 @@ export default function HomeScreen() {
               <AntDesign
                 name={isOpenNitrogenDioxide ? 'up' : 'down'}
                 size={16}
-                color="#3b3b3b"
+                color="#858585"
               />
             </TouchableOpacity>
             {isOpenNitrogenDioxide && (
