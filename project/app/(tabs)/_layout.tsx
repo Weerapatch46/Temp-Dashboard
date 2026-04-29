@@ -128,7 +128,7 @@ export default function TabLayout() {
         headerTitleAlign: 'center',
         tabBarActiveTintColor: '#007AFF',
         tabBarStyle: {
-          height: 100,
+          height: 90,
           paddingBottom: 10,
           paddingTop: 10,
         }
