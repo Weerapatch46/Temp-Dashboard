@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, TouchableOpacity, useWindowDimensions, View, Image, ScrollView } from 'react-native';
+import { StyleSheet, TouchableOpacity, useWindowDimensions, View, Image, ScrollView, useColorScheme } from 'react-native';
 import { ThemedText } from '@/components/themed-text';
 import { AntDesign } from '@expo/vector-icons';
 import { LineChart } from "react-native-chart-kit";
@@ -7,6 +7,7 @@ import { LineChart } from "react-native-chart-kit";
 export default function GraphScreen() {
   const { width } = useWindowDimensions();
   const isDesktop = width >= 768;
+  const colorScheme = useColorScheme();
   const [isOpenTemperature, setIsOpenTemperature] = useState(false);
   const [isOpenPressure, setIsOpenPressure] = useState(false);
   const [isOpenCarbonDioxide, setIsOpenCarbonDioxide] = useState(false);
@@ -42,7 +43,7 @@ export default function GraphScreen() {
 
       setTempData((prev) => {
         const updated = [...prev, newTemp];
-        return updated.slice(-6); // เก็บข้อมูลไว้แค่ 6 จุดล่าสุด
+        return updated.slice(-6);
       });
 
       setPressureData((prev) => {
@@ -81,15 +82,14 @@ export default function GraphScreen() {
       });
 
       setLabels((prev) => {
-        const updated = [...prev, timeString];
-        return updated.slice(-6);
+        const updatedLabels = ["", "", "", "", "", timeString];
+        return updatedLabels;
       });
     }, 2000);
 
     return () => clearInterval(interval);
   }, []);
 
-  // 3. กำหนดสีเส้นตามอุณหภูมิล่าสุด
   const latestTemp = tempData[tempData.length - 1];
   const latestPressure = pressureData[pressureData.length - 1];
   const latestCarbonDioxide = carbonDioxideData[carbonDioxideData.length - 1];
@@ -222,9 +222,617 @@ export default function GraphScreen() {
   return (
     <ScrollView style={styles.container}>
       {isDesktop ? (
-        <ThemedText type="title" style={{ margin: 20 }}>
-          Graph for Desktop
-        </ThemedText>
+        <View style={{ flex: 1 }}>
+          <View style={styles.menuDesktopRow}>
+            <View style={[styles.menuDesktop,
+            {
+              backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff', borderColor: colorScheme === 'dark' ? '#555555' : '#d9d9d9',
+            }
+            ]}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                <Image
+                  source={require('@/assets/images/temperature.png')}
+                  style={{ width: 40, height: 40, margin: 10 }}
+                />
+              </View>
+              <ThemedText style={{ fontSize: 24, fontWeight: 'bold', marginTop: 10, marginLeft: 20 }}>
+                Temperature
+              </ThemedText>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View style={{ width: 30, alignItems: 'center', justifyContent: 'center' }}>
+                  <ThemedText style={{
+                    transform: [{ rotate: '-90deg' }],
+                    width: 150,
+                    textAlign: 'center',
+                    fontSize: 14,
+                    color: colorScheme === 'dark' ? '#ffffff' : '#555555',
+                  }}>
+                    อุณหภูมิ (°C)
+                  </ThemedText>
+                </View>
+                <LineChart
+                  data={tempChartData}
+                  width={(width / 3) - 200}
+                  height={290}
+
+                  fromZero={false}
+                  withVerticalLines={false}
+                  withHorizontalLines={true}
+                  withDots={true}
+                  segments={5}
+
+                  chartConfig={{
+                    backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                    backgroundGradientFrom: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                    backgroundGradientTo: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                    decimalPlaces: 0,
+                    color: (opacity = 1) => getLineColor(latestTemp),
+                    labelColor: (opacity = 1) => colorScheme === 'dark' ? '#ffffff' : '#555555',
+
+                    propsForBackgroundLines: {
+                      strokeWidth: 1,
+                      stroke: colorScheme === 'dark' ? '#444444' : '#e3e3e3',
+                      strokeDasharray: '',
+                    },
+
+                    propsForDots: {
+                      r: '4',
+                      strokeWidth: '2',
+                      stroke: getLineColor(latestTemp),
+                    },
+
+                    fillShadowGradientFrom: getLineColor(latestTemp),
+                    fillShadowGradientTo: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                    fillShadowGradientOpacity: 0.1,
+                  }}
+                  bezier={false}
+
+                  style={{
+                    borderRadius: 16,
+                    marginVertical: 8,
+                    paddingRight: 40,
+                  }}
+                />
+              </View>
+              <ThemedText style={{ textAlign: 'center', marginTop: 10 }}>
+                อุณหภูมิล่าสุด: <ThemedText style={{ fontWeight: 'bold', color: getLineColor(latestTemp) }}>{latestTemp}°C</ThemedText>
+              </ThemedText>
+            </View>
+
+            <View style={[styles.menuDesktop,
+            {
+              backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff', borderColor: colorScheme === 'dark' ? '#555555' : '#d9d9d9',
+            }
+            ]}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                <Image
+                  source={require('@/assets/images/pressure-gauge.png')}
+                  style={{ width: 40, height: 40, margin: 10 }}
+                />
+              </View>
+              <ThemedText style={{ fontSize: 24, fontWeight: 'bold', marginTop: 10, marginLeft: 20 }}>
+                Pressure
+              </ThemedText>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View style={{ width: 30, alignItems: 'center', justifyContent: 'center' }}>
+                  <ThemedText style={{
+                    transform: [{ rotate: '-90deg' }],
+                    width: 150,
+                    textAlign: 'center',
+                    fontSize: 14,
+                    color: colorScheme === 'dark' ? '#ffffff' : '#555555',
+                  }}>
+                    ความดัน (hPa)
+                  </ThemedText>
+                </View>
+                <LineChart
+                  data={pressureChartData}
+                  width={(width / 3) - 200}
+                  height={290}
+
+                  fromZero={false}
+                  withVerticalLines={false}
+                  withHorizontalLines={true}
+                  withDots={true}
+                  segments={5}
+
+                  chartConfig={{
+                    backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                    backgroundGradientFrom: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                    backgroundGradientTo: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                    decimalPlaces: 0,
+                    color: (opacity = 1) => getPressureLineColor(latestPressure),
+                    labelColor: (opacity = 1) => colorScheme === 'dark' ? '#ffffff' : '#555555',
+
+                    propsForBackgroundLines: {
+                      strokeWidth: 1,
+                      stroke: colorScheme === 'dark' ? '#444444' : '#e3e3e3',
+                      strokeDasharray: '',
+                    },
+
+                    propsForDots: {
+                      r: '4',
+                      strokeWidth: '2',
+                      stroke: getPressureLineColor(latestPressure),
+                    },
+
+                    fillShadowGradientFrom: getPressureLineColor(latestPressure),
+                    fillShadowGradientTo: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                    fillShadowGradientOpacity: 0.1,
+                  }}
+                  bezier={false}
+
+                  style={{
+                    borderRadius: 16,
+                    marginVertical: 8,
+                    paddingRight: 40,
+                  }}
+                />
+              </View>
+              <ThemedText style={{ textAlign: 'center', marginTop: 10 }}>
+                ความดันล่าสุด: <ThemedText style={{ fontWeight: 'bold', color: getPressureLineColor(latestPressure) }}>{latestPressure} hPa</ThemedText>
+              </ThemedText>
+            </View>
+
+            <View style={[styles.menuDesktop,
+            {
+              backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff', borderColor: colorScheme === 'dark' ? '#555555' : '#d9d9d9',
+            }
+            ]}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                <Image
+                  source={require('@/assets/images/carbon-dioxide.png')}
+                  style={{ width: 40, height: 40, margin: 10 }}
+                />
+              </View>
+              <ThemedText style={{ fontSize: 24, fontWeight: 'bold', marginTop: 10, marginLeft: 20 }}>
+                Carbon Dioxide
+              </ThemedText>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View style={{ width: 30, alignItems: 'center', justifyContent: 'center' }}>
+                  <ThemedText style={{
+                    transform: [{ rotate: '-90deg' }],
+                    width: 150,
+                    textAlign: 'center',
+                    fontSize: 14,
+                    color: colorScheme === 'dark' ? '#ffffff' : '#555555',
+                  }}>
+                    CO2 (ppm)
+                  </ThemedText>
+                </View>
+                <LineChart
+                  data={carbonDioxideChartData}
+                  width={(width / 3) - 200}
+                  height={290}
+
+                  fromZero={false}
+                  withVerticalLines={false}
+                  withHorizontalLines={true}
+                  withDots={true}
+                  segments={5}
+
+                  chartConfig={{
+                    backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                    backgroundGradientFrom: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                    backgroundGradientTo: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                    decimalPlaces: 0,
+                    color: (opacity = 1) => getCarbonDioxideLineColor(latestCarbonDioxide),
+                    labelColor: (opacity = 1) => colorScheme === 'dark' ? '#ffffff' : '#555555',
+
+                    propsForBackgroundLines: {
+                      strokeWidth: 1,
+                      stroke: colorScheme === 'dark' ? '#444444' : '#e3e3e3',
+                      strokeDasharray: '',
+                    },
+
+                    propsForDots: {
+                      r: '4',
+                      strokeWidth: '2',
+                      stroke: getCarbonDioxideLineColor(latestCarbonDioxide),
+                    },
+
+                    fillShadowGradientFrom: getCarbonDioxideLineColor(latestCarbonDioxide),
+                    fillShadowGradientTo: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                    fillShadowGradientOpacity: 0.1,
+                  }}
+                  bezier={false}
+
+                  style={{
+                    borderRadius: 16,
+                    marginVertical: 8,
+                    paddingRight: 40,
+                  }}
+                />
+              </View>
+              <ThemedText style={{ textAlign: 'center', marginTop: 10 }}>
+                คาร์บอนไดออกไซด์ล่าสุด: <ThemedText style={{ fontWeight: 'bold', color: getCarbonDioxideLineColor(latestCarbonDioxide) }}>{latestCarbonDioxide} ppm</ThemedText>
+              </ThemedText>
+            </View>
+          </View>
+
+          <View style={styles.menuDesktopRow}>
+            <View style={[styles.menuDesktop,
+            {
+              backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff', borderColor: colorScheme === 'dark' ? '#555555' : '#d9d9d9',
+            }
+            ]}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                <Image
+                  source={require('@/assets/images/methane.png')}
+                  style={{ width: 40, height: 40, margin: 10 }}
+                />
+              </View>
+              <ThemedText style={{ fontSize: 24, fontWeight: 'bold', marginTop: 10, marginLeft: 20 }}>
+                Methane
+              </ThemedText>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View style={{ width: 30, alignItems: 'center', justifyContent: 'center' }}>
+                  <ThemedText style={{
+                    transform: [{ rotate: '-90deg' }],
+                    width: 150,
+                    textAlign: 'center',
+                    fontSize: 14,
+                    color: colorScheme === 'dark' ? '#ffffff' : '#555555',
+                  }}>
+                    Methane (ppm)
+                  </ThemedText>
+                </View>
+                <LineChart
+                  data={methaneChartData}
+                  width={(width / 3) - 200}
+                  height={290}
+
+                  fromZero={false}
+                  withVerticalLines={false}
+                  withHorizontalLines={true}
+                  withDots={true}
+                  segments={5}
+
+                  chartConfig={{
+                    backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                    backgroundGradientFrom: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                    backgroundGradientTo: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                    decimalPlaces: 0,
+                    color: (opacity = 1) => getMethaneLineColor(latestMethane),
+                    labelColor: (opacity = 1) => colorScheme === 'dark' ? '#ffffff' : '#555555',
+
+                    propsForBackgroundLines: {
+                      strokeWidth: 1,
+                      stroke: colorScheme === 'dark' ? '#444444' : '#e3e3e3',
+                      strokeDasharray: '',
+                    },
+
+                    propsForDots: {
+                      r: '4',
+                      strokeWidth: '2',
+                      stroke: getMethaneLineColor(latestMethane),
+                    },
+
+                    fillShadowGradientFrom: getMethaneLineColor(latestMethane),
+                    fillShadowGradientTo: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                    fillShadowGradientOpacity: 0.1,
+                  }}
+                  bezier={false}
+
+                  style={{
+                    borderRadius: 16,
+                    marginVertical: 8,
+                    paddingRight: 40,
+                  }}
+                />
+              </View>
+              <ThemedText style={{ textAlign: 'center', marginTop: 10 }}>
+                เมธานล่าสุด: <ThemedText style={{ fontWeight: 'bold', color: getMethaneLineColor(latestMethane) }}>{latestMethane} ppm</ThemedText>
+              </ThemedText>
+            </View>
+
+            <View style={[styles.menuDesktop,
+            {
+              backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff', borderColor: colorScheme === 'dark' ? '#555555' : '#d9d9d9',
+            }
+            ]}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                <Image
+                  source={require('@/assets/images/ethanol.png')}
+                  style={{ width: 40, height: 40, margin: 10 }}
+                />
+              </View>
+              <ThemedText style={{ fontSize: 24, fontWeight: 'bold', marginTop: 10, marginLeft: 20 }}>
+                Ethanol
+              </ThemedText>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View style={{ width: 30, alignItems: 'center', justifyContent: 'center' }}>
+                  <ThemedText style={{
+                    transform: [{ rotate: '-90deg' }],
+                    width: 150,
+                    textAlign: 'center',
+                    fontSize: 14,
+                    color: colorScheme === 'dark' ? '#ffffff' : '#555555',
+                  }}>
+                    Ethanol (ppm)
+                  </ThemedText>
+                </View>
+                <LineChart
+                  data={ethanolChartData}
+                  width={(width / 3) - 200}
+                  height={290}
+
+                  fromZero={false}
+                  withVerticalLines={false}
+                  withHorizontalLines={true}
+                  withDots={true}
+                  segments={5}
+
+                  chartConfig={{
+                    backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                    backgroundGradientFrom: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                    backgroundGradientTo: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                    decimalPlaces: 0,
+                    color: (opacity = 1) => getEthanolLineColor(latestEthanol),
+                    labelColor: (opacity = 1) => colorScheme === 'dark' ? '#ffffff' : '#555555',
+
+                    propsForBackgroundLines: {
+                      strokeWidth: 1,
+                      stroke: colorScheme === 'dark' ? '#444444' : '#e3e3e3',
+                      strokeDasharray: '',
+                    },
+
+                    propsForDots: {
+                      r: '4',
+                      strokeWidth: '2',
+                      stroke: getEthanolLineColor(latestEthanol),
+                    },
+
+                    fillShadowGradientFrom: getEthanolLineColor(latestEthanol),
+                    fillShadowGradientTo: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                    fillShadowGradientOpacity: 0.1,
+                  }}
+                  bezier={false}
+
+                  style={{
+                    borderRadius: 16,
+                    marginVertical: 8,
+                    paddingRight: 40,
+                  }}
+                />
+              </View>
+              <ThemedText style={{ textAlign: 'center', marginTop: 10 }}>
+                แอลกอฮอล์ล่าสุด: <ThemedText style={{ fontWeight: 'bold', color: getEthanolLineColor(latestEthanol) }}>{latestEthanol} ppm</ThemedText>
+              </ThemedText>
+            </View>
+
+            <View style={[styles.menuDesktop,
+            {
+              backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff', borderColor: colorScheme === 'dark' ? '#555555' : '#d9d9d9',
+            }
+            ]}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                <Image
+                  source={require('@/assets/images/dioxide.png')}
+                  style={{ width: 40, height: 40, margin: 10 }}
+                />
+              </View>
+              <ThemedText style={{ fontSize: 24, fontWeight: 'bold', marginTop: 10, marginLeft: 20 }}>
+                Nitrogen
+              </ThemedText>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View style={{ width: 30, alignItems: 'center', justifyContent: 'center' }}>
+                  <ThemedText style={{
+                    transform: [{ rotate: '-90deg' }],
+                    width: 150,
+                    textAlign: 'center',
+                    fontSize: 14,
+                    color: colorScheme === 'dark' ? '#ffffff' : '#555555',
+                  }}>
+                    Nitrogen (ppm)
+                  </ThemedText>
+                </View>
+                <LineChart
+                  data={nitrogenChartData}
+                  width={(width / 3) - 200}
+                  height={290}
+
+                  fromZero={false}
+                  withVerticalLines={false}
+                  withHorizontalLines={true}
+                  withDots={true}
+                  segments={5}
+
+                  chartConfig={{
+                    backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                    backgroundGradientFrom: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                    backgroundGradientTo: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                    decimalPlaces: 0,
+                    color: (opacity = 1) => getNitrogenLineColor(latestNitrogen),
+                    labelColor: (opacity = 1) => colorScheme === 'dark' ? '#ffffff' : '#555555',
+
+                    propsForBackgroundLines: {
+                      strokeWidth: 1,
+                      stroke: colorScheme === 'dark' ? '#444444' : '#e3e3e3',
+                      strokeDasharray: '',
+                    },
+
+                    propsForDots: {
+                      r: '4',
+                      strokeWidth: '2',
+                      stroke: getNitrogenLineColor(latestNitrogen),
+                    },
+
+                    fillShadowGradientFrom: getNitrogenLineColor(latestNitrogen),
+                    fillShadowGradientTo: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                    fillShadowGradientOpacity: 0.1,
+                  }}
+                  bezier={false}
+
+                  style={{
+                    borderRadius: 16,
+                    marginVertical: 8,
+                    paddingRight: 40,
+                  }}
+                />
+              </View>
+              <ThemedText style={{ textAlign: 'center', marginTop: 10 }}>
+                ไนโตรเจนล่าสุด: <ThemedText style={{ fontWeight: 'bold', color: getNitrogenLineColor(latestNitrogen) }}>{latestNitrogen} ppm</ThemedText>
+              </ThemedText>
+            </View>
+          </View>
+
+          <View style={styles.menuDesktopRow}>
+            <View style={[styles.menuDesktop,
+            {
+              backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff', borderColor: colorScheme === 'dark' ? '#555555' : '#d9d9d9',
+            }
+            ]}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                <Image
+                  source={require('@/assets/images/ammonia.png')}
+                  style={{ width: 40, height: 40, margin: 10 }}
+                />
+              </View>
+              <ThemedText style={{ fontSize: 24, fontWeight: 'bold', marginTop: 10, marginLeft: 20 }}>
+                Ammonia
+              </ThemedText>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View style={{ width: 30, alignItems: 'center', justifyContent: 'center' }}>
+                  <ThemedText style={{
+                    transform: [{ rotate: '-90deg' }],
+                    width: 150,
+                    textAlign: 'center',
+                    fontSize: 14,
+                    color: colorScheme === 'dark' ? '#ffffff' : '#555555',
+                  }}>
+                    Ammonia (ppm)
+                  </ThemedText>
+                </View>
+                <LineChart
+                  data={ammoniaChartData}
+                  width={(width / 3) - 200}
+                  height={290}
+
+                  fromZero={false}
+                  withVerticalLines={false}
+                  withHorizontalLines={true}
+                  withDots={true}
+                  segments={5}
+
+                  chartConfig={{
+                    backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                    backgroundGradientFrom: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                    backgroundGradientTo: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                    decimalPlaces: 0,
+                    color: (opacity = 1) => getAmmoniaLineColor(latestAmmonia),
+                    labelColor: (opacity = 1) => colorScheme === 'dark' ? '#ffffff' : '#555555',
+
+                    propsForBackgroundLines: {
+                      strokeWidth: 1,
+                      stroke: colorScheme === 'dark' ? '#444444' : '#e3e3e3',
+                      strokeDasharray: '',
+                    },
+
+                    propsForDots: {
+                      r: '4',
+                      strokeWidth: '2',
+                      stroke: getAmmoniaLineColor(latestAmmonia),
+                    },
+
+                    fillShadowGradientFrom: getAmmoniaLineColor(latestAmmonia),
+                    fillShadowGradientTo: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                    fillShadowGradientOpacity: 0.1,
+                  }}
+                  bezier={false}
+
+                  style={{
+                    borderRadius: 16,
+                    marginVertical: 8,
+                    paddingRight: 40,
+                  }}
+                />
+              </View>
+              <ThemedText style={{ textAlign: 'center', marginTop: 10 }}>
+                แอมโมเนียล่าสุด: <ThemedText style={{ fontWeight: 'bold', color: getAmmoniaLineColor(latestAmmonia) }}>{latestAmmonia} ppm</ThemedText>
+              </ThemedText>
+            </View>
+
+            <View style={[styles.menuDesktop,
+            {
+              backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff', borderColor: colorScheme === 'dark' ? '#555555' : '#d9d9d9',
+            }
+            ]}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                <Image
+                  source={require('@/assets/images/atmospheric-chemistry.png')}
+                  style={{ width: 40, height: 40, margin: 10 }}
+                />
+              </View>
+              <ThemedText style={{ fontSize: 24, fontWeight: 'bold', marginTop: 10, marginLeft: 20 }}>
+                Nitrogen Dioxide
+              </ThemedText>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View style={{ width: 30, alignItems: 'center', justifyContent: 'center' }}>
+                  <ThemedText style={{
+                    transform: [{ rotate: '-90deg' }],
+                    width: 150,
+                    textAlign: 'center',
+                    fontSize: 14,
+                    color: colorScheme === 'dark' ? '#ffffff' : '#555555',
+                  }}>
+                    Nitrogen Dioxide (ppb)
+                  </ThemedText>
+                </View>
+                <LineChart
+                  data={nitrogenDioxideChartData}
+                  width={(width / 3) - 200}
+                  height={290}
+
+
+                  fromZero={false}
+                  withVerticalLines={false}
+                  withHorizontalLines={true}
+                  withDots={true}
+                  segments={5}
+
+                  chartConfig={{
+                    backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                    backgroundGradientFrom: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                    backgroundGradientTo: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                    decimalPlaces: 0,
+                    color: (opacity = 1) => getNitrogenDioxideLineColor(latestNitrogenDioxide),
+                    labelColor: (opacity = 1) => colorScheme === 'dark' ? '#ffffff' : '#555555',
+
+                    propsForBackgroundLines: {
+                      strokeWidth: 1,
+                      stroke: colorScheme === 'dark' ? '#444444' : '#e3e3e3',
+                      strokeDasharray: '',
+                    },
+
+                    propsForDots: {
+                      r: '4',
+                      strokeWidth: '2',
+                      stroke: getNitrogenDioxideLineColor(latestNitrogenDioxide),
+                    },
+
+                    fillShadowGradientFrom: getNitrogenDioxideLineColor(latestNitrogenDioxide),
+                    fillShadowGradientTo: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                    fillShadowGradientOpacity: 0.1,
+                  }}
+                  bezier={false}
+
+                  style={{
+                    borderRadius: 16,
+                    marginVertical: 8,
+                    paddingRight: 40,
+                  }}
+                />
+              </View>
+              <ThemedText style={{ textAlign: 'center', marginTop: 10 }}>
+                ไนโตรเจนไดออกไซด์ล่าสุด: <ThemedText style={{ fontWeight: 'bold', color: getNitrogenDioxideLineColor(latestNitrogenDioxide) }}>{latestNitrogenDioxide} ppm</ThemedText>
+              </ThemedText>
+            </View>
+            <View style={{ flex: 1 }}>
+            </View>
+          </View>
+        </View>
+
       ) : (
         <>
           {/* Graph for Temperature */}
@@ -243,32 +851,57 @@ export default function GraphScreen() {
 
             {isOpenTemperature && (
               <View style={styles.menuMobileContent}>
-                <LineChart
-                  data={tempChartData}
-                  width={width - 60}
-                  height={220}
-                  formatXLabel={(label) => {
-                    const isLastLabel = label === labels[labels.length - 1];
-                    return isLastLabel ? label : "";
-                  }}
-                  chartConfig={{
-                    backgroundColor: "#ffffff",
-                    backgroundGradientFrom: "#ffffff",
-                    backgroundGradientTo: "#ffffff",
-                    decimalPlaces: 0,
-                    color: (opacity = 1) => getLineColor(latestTemp),
-                    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                    propsForLabels: {
-                      fontSize: 10,
-                    },
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <View style={{ width: 30, alignItems: 'center', justifyContent: 'center' }}>
+                    <ThemedText style={{
+                      transform: [{ rotate: '-90deg' }],
+                      width: 150,
+                      textAlign: 'center',
+                      fontSize: 14,
+                      color: colorScheme === 'dark' ? '#ffffff' : '#555555',
+                    }}>
+                      อุณหภูมิ (°C)
+                    </ThemedText>
+                  </View>
+                  <LineChart
+                    data={tempChartData}
+                    width={width - 120}
+                    height={220}
 
-                    fillShadowGradientFrom: getLineColor(latestTemp),
-                    fillShadowGradientTo: "#ffffff",
-                    fillShadowGradientOpacity: 0.2,
-                  }}
-                  bezier
-                  style={{ borderRadius: 16, marginVertical: 8 }}
-                />
+                    fromZero={false}
+                    withVerticalLines={false}
+                    withHorizontalLines={true}
+                    withDots={true}
+                    segments={5}
+
+                    chartConfig={{
+                      backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                      backgroundGradientFrom: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                      backgroundGradientTo: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                      decimalPlaces: 0,
+                      color: (opacity = 1) => getLineColor(latestTemp),
+                      labelColor: (opacity = 1) => colorScheme === 'dark' ? '#ffffff' : '#555555',
+
+                      propsForBackgroundLines: {
+                        strokeWidth: 1,
+                        stroke: colorScheme === 'dark' ? '#444444' : '#e3e3e3',
+                        strokeDasharray: '',
+                      },
+
+                      propsForDots: {
+                        r: '4',
+                        strokeWidth: '2',
+                        stroke: getLineColor(latestTemp),
+                      },
+
+                      fillShadowGradientFrom: getLineColor(latestTemp),
+                      fillShadowGradientTo: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                      fillShadowGradientOpacity: 0.1,
+                    }}
+                    bezier={false}
+                    style={{ borderRadius: 16, marginVertical: 8 }}
+                  />
+                </View>
                 <ThemedText style={{ textAlign: 'center', marginTop: 10 }}>
                   อุณหภูมิล่าสุด: <ThemedText style={{ fontWeight: 'bold', color: getLineColor(latestTemp) }}>{latestTemp}°C</ThemedText>
                 </ThemedText>
@@ -292,32 +925,57 @@ export default function GraphScreen() {
 
             {isOpenPressure && (
               <View style={styles.menuMobileContent}>
-                <LineChart
-                  data={pressureChartData}
-                  width={width - 60}
-                  height={220}
-                  formatXLabel={(label) => {
-                    const isLastLabel = label === labels[labels.length - 1];
-                    return isLastLabel ? label : "";
-                  }}
-                  chartConfig={{
-                    backgroundColor: "#ffffff",
-                    backgroundGradientFrom: "#ffffff",
-                    backgroundGradientTo: "#ffffff",
-                    decimalPlaces: 0,
-                    color: (opacity = 1) => getPressureLineColor(latestPressure),
-                    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                    propsForLabels: {
-                      fontSize: 10,
-                    },
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <View style={{ width: 30, alignItems: 'center', justifyContent: 'center' }}>
+                    <ThemedText style={{
+                      transform: [{ rotate: '-90deg' }],
+                      width: 300,
+                      textAlign: 'center',
+                      fontSize: 14,
+                      color: colorScheme === 'dark' ? '#ffffff' : '#555555',
+                    }}>
+                      ความดัน (hPa)
+                    </ThemedText>
+                  </View>
+                  <LineChart
+                    data={pressureChartData}
+                    width={width - 120}
+                    height={220}
 
-                    fillShadowGradientFrom: getPressureLineColor(latestPressure),
-                    fillShadowGradientTo: "#ffffff",
-                    fillShadowGradientOpacity: 0.2,
-                  }}
-                  bezier
-                  style={{ borderRadius: 16, marginVertical: 8 }}
-                />
+                    fromZero={false}
+                    withVerticalLines={false}
+                    withHorizontalLines={true}
+                    withDots={true}
+                    segments={5}
+
+                    chartConfig={{
+                      backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                      backgroundGradientFrom: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                      backgroundGradientTo: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                      decimalPlaces: 0,
+                      color: (opacity = 1) => getPressureLineColor(latestPressure),
+                      labelColor: (opacity = 1) => colorScheme === 'dark' ? '#ffffff' : '#555555',
+
+                      propsForBackgroundLines: {
+                        strokeWidth: 1,
+                        stroke: colorScheme === 'dark' ? '#444444' : '#e3e3e3',
+                        strokeDasharray: '',
+                      },
+
+                      propsForDots: {
+                        r: '4',
+                        strokeWidth: '2',
+                        stroke: getPressureLineColor(latestPressure),
+                      },
+
+                      fillShadowGradientFrom: getPressureLineColor(latestPressure),
+                      fillShadowGradientTo: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                      fillShadowGradientOpacity: 0.1,
+                    }}
+                    bezier={false}
+                    style={{ borderRadius: 16, marginVertical: 8 }}
+                  />
+                </View>
                 <ThemedText style={{ textAlign: 'center', marginTop: 10 }}>
                   ความดันล่าสุด: <ThemedText style={{ fontWeight: 'bold', color: getPressureLineColor(latestPressure) }}>{latestPressure} hPa</ThemedText>
                 </ThemedText>
@@ -341,32 +999,57 @@ export default function GraphScreen() {
 
             {isOpenCarbonDioxide && (
               <View style={styles.menuMobileContent}>
-                <LineChart
-                  data={carbonDioxideChartData}
-                  width={width - 60}
-                  height={220}
-                  formatXLabel={(label) => {
-                    const isLastLabel = label === labels[labels.length - 1];
-                    return isLastLabel ? label : "";
-                  }}
-                  chartConfig={{
-                    backgroundColor: "#ffffff",
-                    backgroundGradientFrom: "#ffffff",
-                    backgroundGradientTo: "#ffffff",
-                    decimalPlaces: 0,
-                    color: (opacity = 1) => getCarbonDioxideLineColor(latestCarbonDioxide),
-                    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                    propsForLabels: {
-                      fontSize: 10,
-                    },
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <View style={{ width: 30, alignItems: 'center', justifyContent: 'center' }}>
+                    <ThemedText style={{
+                      transform: [{ rotate: '-90deg' }],
+                      width: 300,
+                      textAlign: 'center',
+                      fontSize: 14,
+                      color: colorScheme === 'dark' ? '#ffffff' : '#555555',
+                    }}>
+                      CO2 (hPa)
+                    </ThemedText>
+                  </View>
+                  <LineChart
+                    data={carbonDioxideChartData}
+                    width={width - 120}
+                    height={220}
 
-                    fillShadowGradientFrom: getCarbonDioxideLineColor(latestCarbonDioxide),
-                    fillShadowGradientTo: "#ffffff",
-                    fillShadowGradientOpacity: 0.2,
-                  }}
-                  bezier
-                  style={{ borderRadius: 16, marginVertical: 8 }}
-                />
+                    fromZero={false}
+                    withVerticalLines={false}
+                    withHorizontalLines={true}
+                    withDots={true}
+                    segments={5}
+
+                    chartConfig={{
+                      backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                      backgroundGradientFrom: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                      backgroundGradientTo: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                      decimalPlaces: 0,
+                      color: (opacity = 1) => getCarbonDioxideLineColor(latestCarbonDioxide),
+                      labelColor: (opacity = 1) => colorScheme === 'dark' ? '#ffffff' : '#555555',
+
+                      propsForBackgroundLines: {
+                        strokeWidth: 1,
+                        stroke: colorScheme === 'dark' ? '#444444' : '#e3e3e3',
+                        strokeDasharray: '',
+                      },
+
+                      propsForDots: {
+                        r: '4',
+                        strokeWidth: '2',
+                        stroke: getCarbonDioxideLineColor(latestCarbonDioxide),
+                      },
+
+                      fillShadowGradientFrom: getCarbonDioxideLineColor(latestCarbonDioxide),
+                      fillShadowGradientTo: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                      fillShadowGradientOpacity: 0.1,
+                    }}
+                    bezier={false}
+                    style={{ borderRadius: 16, marginVertical: 8 }}
+                  />
+                </View>
                 <ThemedText style={{ textAlign: 'center', marginTop: 10 }}>
                   คาร์บอนไดออกไซด์ล่าสุด: <ThemedText style={{ fontWeight: 'bold', color: getCarbonDioxideLineColor(latestCarbonDioxide) }}>{latestCarbonDioxide} ppm</ThemedText>
                 </ThemedText>
@@ -390,32 +1073,57 @@ export default function GraphScreen() {
 
             {isOpenMethane && (
               <View style={styles.menuMobileContent}>
-                <LineChart
-                  data={methaneChartData}
-                  width={width - 60}
-                  height={220}
-                  formatXLabel={(label) => {
-                    const isLastLabel = label === labels[labels.length - 1];
-                    return isLastLabel ? label : "";
-                  }}
-                  chartConfig={{
-                    backgroundColor: "#ffffff",
-                    backgroundGradientFrom: "#ffffff",
-                    backgroundGradientTo: "#ffffff",
-                    decimalPlaces: 0,
-                    color: (opacity = 1) => getMethaneLineColor(latestMethane),
-                    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                    propsForLabels: {
-                      fontSize: 10,
-                    },
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <View style={{ width: 30, alignItems: 'center', justifyContent: 'center' }}>
+                    <ThemedText style={{
+                      transform: [{ rotate: '-90deg' }],
+                      width: 300,
+                      textAlign: 'center',
+                      fontSize: 14,
+                      color: colorScheme === 'dark' ? '#ffffff' : '#555555',
+                    }}>
+                      Methane (ppm)
+                    </ThemedText>
+                  </View>
+                  <LineChart
+                    data={methaneChartData}
+                    width={width - 120}
+                    height={220}
 
-                    fillShadowGradientFrom: getMethaneLineColor(latestMethane),
-                    fillShadowGradientTo: "#ffffff",
-                    fillShadowGradientOpacity: 0.2,
-                  }}
-                  bezier
-                  style={{ borderRadius: 16, marginVertical: 8 }}
-                />
+                    fromZero={false}
+                    withVerticalLines={false}
+                    withHorizontalLines={true}
+                    withDots={true}
+                    segments={5}
+
+                    chartConfig={{
+                      backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                      backgroundGradientFrom: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                      backgroundGradientTo: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                      decimalPlaces: 0,
+                      color: (opacity = 1) => getMethaneLineColor(latestMethane),
+                      labelColor: (opacity = 1) => colorScheme === 'dark' ? '#ffffff' : '#555555',
+
+                      propsForBackgroundLines: {
+                        strokeWidth: 1,
+                        stroke: colorScheme === 'dark' ? '#444444' : '#e3e3e3',
+                        strokeDasharray: '',
+                      },
+
+                      propsForDots: {
+                        r: '4',
+                        strokeWidth: '2',
+                        stroke: getMethaneLineColor(latestMethane),
+                      },
+
+                      fillShadowGradientFrom: getMethaneLineColor(latestMethane),
+                      fillShadowGradientTo: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                      fillShadowGradientOpacity: 0.1,
+                    }}
+                    bezier={false}
+                    style={{ borderRadius: 16, marginVertical: 8 }}
+                  />
+                </View>
                 <ThemedText style={{ textAlign: 'center', marginTop: 10 }}>
                   เมธานล่าสุด: <ThemedText style={{ fontWeight: 'bold', color: getMethaneLineColor(latestMethane) }}>{latestMethane} ppm</ThemedText>
                 </ThemedText>
@@ -439,32 +1147,57 @@ export default function GraphScreen() {
 
             {isOpenEthanol && (
               <View style={styles.menuMobileContent}>
-                <LineChart
-                  data={ethanolChartData}
-                  width={width - 60}
-                  height={220}
-                  formatXLabel={(label) => {
-                    const isLastLabel = label === labels[labels.length - 1];
-                    return isLastLabel ? label : "";
-                  }}
-                  chartConfig={{
-                    backgroundColor: "#ffffff",
-                    backgroundGradientFrom: "#ffffff",
-                    backgroundGradientTo: "#ffffff",
-                    decimalPlaces: 0,
-                    color: (opacity = 1) => getEthanolLineColor(latestEthanol),
-                    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                    propsForLabels: {
-                      fontSize: 10,
-                    },
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <View style={{ width: 30, alignItems: 'center', justifyContent: 'center' }}>
+                    <ThemedText style={{
+                      transform: [{ rotate: '-90deg' }],
+                      width: 300,
+                      textAlign: 'center',
+                      fontSize: 14,
+                      color: colorScheme === 'dark' ? '#ffffff' : '#555555',
+                    }}>
+                      Ethanol (ppm)
+                    </ThemedText>
+                  </View>
+                  <LineChart
+                    data={ethanolChartData}
+                    width={width - 120}
+                    height={220}
 
-                    fillShadowGradientFrom: getEthanolLineColor(latestEthanol),
-                    fillShadowGradientTo: "#ffffff",
-                    fillShadowGradientOpacity: 0.2,
-                  }}
-                  bezier
-                  style={{ borderRadius: 16, marginVertical: 8 }}
-                />
+                    fromZero={false}
+                    withVerticalLines={false}
+                    withHorizontalLines={true}
+                    withDots={true}
+                    segments={5}
+
+                    chartConfig={{
+                      backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                      backgroundGradientFrom: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                      backgroundGradientTo: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                      decimalPlaces: 0,
+                      color: (opacity = 1) => getEthanolLineColor(latestEthanol),
+                      labelColor: (opacity = 1) => colorScheme === 'dark' ? '#ffffff' : '#555555',
+
+                      propsForBackgroundLines: {
+                        strokeWidth: 1,
+                        stroke: colorScheme === 'dark' ? '#444444' : '#e3e3e3',
+                        strokeDasharray: '',
+                      },
+
+                      propsForDots: {
+                        r: '4',
+                        strokeWidth: '2',
+                        stroke: getEthanolLineColor(latestEthanol),
+                      },
+
+                      fillShadowGradientFrom: getEthanolLineColor(latestEthanol),
+                      fillShadowGradientTo: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                      fillShadowGradientOpacity: 0.1,
+                    }}
+                    bezier={false}
+                    style={{ borderRadius: 16, marginVertical: 8 }}
+                  />
+                </View>
                 <ThemedText style={{ textAlign: 'center', marginTop: 10 }}>
                   แอลกอฮอล์ล่าสุด: <ThemedText style={{ fontWeight: 'bold', color: getEthanolLineColor(latestEthanol) }}>{latestEthanol} ppm</ThemedText>
                 </ThemedText>
@@ -488,32 +1221,57 @@ export default function GraphScreen() {
 
             {isOpenNitrogen && (
               <View style={styles.menuMobileContent}>
-                <LineChart
-                  data={nitrogenChartData}
-                  width={width - 60}
-                  height={220}
-                  formatXLabel={(label) => {
-                    const isLastLabel = label === labels[labels.length - 1];
-                    return isLastLabel ? label : "";
-                  }}
-                  chartConfig={{
-                    backgroundColor: "#ffffff",
-                    backgroundGradientFrom: "#ffffff",
-                    backgroundGradientTo: "#ffffff",
-                    decimalPlaces: 0,
-                    color: (opacity = 1) => getNitrogenLineColor(latestNitrogen),
-                    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                    propsForLabels: {
-                      fontSize: 10,
-                    },
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <View style={{ width: 30, alignItems: 'center', justifyContent: 'center' }}>
+                    <ThemedText style={{
+                      transform: [{ rotate: '-90deg' }],
+                      width: 300,
+                      textAlign: 'center',
+                      fontSize: 14,
+                      color: colorScheme === 'dark' ? '#ffffff' : '#555555',
+                    }}>
+                      Nitrogen (ppm)
+                    </ThemedText>
+                  </View>
+                  <LineChart
+                    data={nitrogenChartData}
+                    width={width - 120}
+                    height={220}
 
-                    fillShadowGradientFrom: getNitrogenLineColor(latestNitrogen),
-                    fillShadowGradientTo: "#ffffff",
-                    fillShadowGradientOpacity: 0.2,
-                  }}
-                  bezier
-                  style={{ borderRadius: 16, marginVertical: 8 }}
-                />
+                    fromZero={false}
+                    withVerticalLines={false}
+                    withHorizontalLines={true}
+                    withDots={true}
+                    segments={5}
+
+                    chartConfig={{
+                      backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                      backgroundGradientFrom: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                      backgroundGradientTo: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                      decimalPlaces: 0,
+                      color: (opacity = 1) => getNitrogenLineColor(latestNitrogen),
+                      labelColor: (opacity = 1) => colorScheme === 'dark' ? '#ffffff' : '#555555',
+
+                      propsForBackgroundLines: {
+                        strokeWidth: 1,
+                        stroke: colorScheme === 'dark' ? '#444444' : '#e3e3e3',
+                        strokeDasharray: '',
+                      },
+
+                      propsForDots: {
+                        r: '4',
+                        strokeWidth: '2',
+                        stroke: getNitrogenLineColor(latestNitrogen),
+                      },
+
+                      fillShadowGradientFrom: getNitrogenLineColor(latestNitrogen),
+                      fillShadowGradientTo: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                      fillShadowGradientOpacity: 0.1,
+                    }}
+                    bezier={false}
+                    style={{ borderRadius: 16, marginVertical: 8 }}
+                  />
+                </View>
                 <ThemedText style={{ textAlign: 'center', marginTop: 10 }}>
                   ไนโตรเจนล่าสุด: <ThemedText style={{ fontWeight: 'bold', color: getNitrogenLineColor(latestNitrogen) }}>{latestNitrogen} ppm</ThemedText>
                 </ThemedText>
@@ -537,32 +1295,57 @@ export default function GraphScreen() {
 
             {isOpenAmmonia && (
               <View style={styles.menuMobileContent}>
-                <LineChart
-                  data={ammoniaChartData}
-                  width={width - 60}
-                  height={220}
-                  formatXLabel={(label) => {
-                    const isLastLabel = label === labels[labels.length - 1];
-                    return isLastLabel ? label : "";
-                  }}
-                  chartConfig={{
-                    backgroundColor: "#ffffff",
-                    backgroundGradientFrom: "#ffffff",
-                    backgroundGradientTo: "#ffffff",
-                    decimalPlaces: 0,
-                    color: (opacity = 1) => getAmmoniaLineColor(latestAmmonia),
-                    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                    propsForLabels: {
-                      fontSize: 10,
-                    },
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <View style={{ width: 30, alignItems: 'center', justifyContent: 'center' }}>
+                    <ThemedText style={{
+                      transform: [{ rotate: '-90deg' }],
+                      width: 300,
+                      textAlign: 'center',
+                      fontSize: 14,
+                      color: colorScheme === 'dark' ? '#ffffff' : '#555555',
+                    }}>
+                      Ammonia (ppm)
+                    </ThemedText>
+                  </View>
+                  <LineChart
+                    data={ammoniaChartData}
+                    width={width - 120}
+                    height={220}
 
-                    fillShadowGradientFrom: getAmmoniaLineColor(latestAmmonia),
-                    fillShadowGradientTo: "#ffffff",
-                    fillShadowGradientOpacity: 0.2,
-                  }}
-                  bezier
-                  style={{ borderRadius: 16, marginVertical: 8 }}
-                />
+                    fromZero={false}
+                    withVerticalLines={false}
+                    withHorizontalLines={true}
+                    withDots={true}
+                    segments={5}
+
+                    chartConfig={{
+                      backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                      backgroundGradientFrom: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                      backgroundGradientTo: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                      decimalPlaces: 0,
+                      color: (opacity = 1) => getAmmoniaLineColor(latestAmmonia),
+                      labelColor: (opacity = 1) => colorScheme === 'dark' ? '#ffffff' : '#555555',
+
+                      propsForBackgroundLines: {
+                        strokeWidth: 1,
+                        stroke: colorScheme === 'dark' ? '#444444' : '#e3e3e3',
+                        strokeDasharray: '',
+                      },
+
+                      propsForDots: {
+                        r: '4',
+                        strokeWidth: '2',
+                        stroke: getAmmoniaLineColor(latestAmmonia),
+                      },
+
+                      fillShadowGradientFrom: getAmmoniaLineColor(latestAmmonia),
+                      fillShadowGradientTo: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                      fillShadowGradientOpacity: 0.1,
+                    }}
+                    bezier={false}
+                    style={{ borderRadius: 16, marginVertical: 8 }}
+                  />
+                </View>
                 <ThemedText style={{ textAlign: 'center', marginTop: 10 }}>
                   แอมโมเนียล่าสุด: <ThemedText style={{ fontWeight: 'bold', color: getAmmoniaLineColor(latestAmmonia) }}>{latestAmmonia} ppm</ThemedText>
                 </ThemedText>
@@ -586,32 +1369,57 @@ export default function GraphScreen() {
 
             {isOpenNitrogenDioxide && (
               <View style={styles.menuMobileContent}>
-                <LineChart
-                  data={nitrogenDioxideChartData}
-                  width={width - 60}
-                  height={220}
-                  formatXLabel={(label) => {
-                    const isLastLabel = label === labels[labels.length - 1];
-                    return isLastLabel ? label : "";
-                  }}
-                  chartConfig={{
-                    backgroundColor: "#ffffff",
-                    backgroundGradientFrom: "#ffffff",
-                    backgroundGradientTo: "#ffffff",
-                    decimalPlaces: 0,
-                    color: (opacity = 1) => getNitrogenDioxideLineColor(latestNitrogenDioxide),
-                    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                    propsForLabels: {
-                      fontSize: 10,
-                    },
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <View style={{ width: 30, alignItems: 'center', justifyContent: 'center' }}>
+                    <ThemedText style={{
+                      transform: [{ rotate: '-90deg' }],
+                      width: 300,
+                      textAlign: 'center',
+                      fontSize: 14,
+                      color: colorScheme === 'dark' ? '#ffffff' : '#555555',
+                    }}>
+                      Nitrogen Dioxide (ppd)
+                    </ThemedText>
+                  </View>
+                  <LineChart
+                    data={nitrogenDioxideChartData}
+                    width={width - 120}
+                    height={220}
 
-                    fillShadowGradientFrom: getNitrogenDioxideLineColor(latestNitrogenDioxide),
-                    fillShadowGradientTo: "#ffffff",
-                    fillShadowGradientOpacity: 0.2,
-                  }}
-                  bezier
-                  style={{ borderRadius: 16, marginVertical: 8 }}
-                />
+                    fromZero={false}
+                    withVerticalLines={false}
+                    withHorizontalLines={true}
+                    withDots={true}
+                    segments={5}
+
+                    chartConfig={{
+                      backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                      backgroundGradientFrom: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                      backgroundGradientTo: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                      decimalPlaces: 0,
+                      color: (opacity = 1) => getNitrogenDioxideLineColor(latestNitrogenDioxide),
+                      labelColor: (opacity = 1) => colorScheme === 'dark' ? '#ffffff' : '#555555',
+
+                      propsForBackgroundLines: {
+                        strokeWidth: 1,
+                        stroke: colorScheme === 'dark' ? '#444444' : '#e3e3e3',
+                        strokeDasharray: '',
+                      },
+
+                      propsForDots: {
+                        r: '4',
+                        strokeWidth: '2',
+                        stroke: getNitrogenDioxideLineColor(latestNitrogenDioxide),
+                      },
+
+                      fillShadowGradientFrom: getNitrogenDioxideLineColor(latestNitrogenDioxide),
+                      fillShadowGradientTo: colorScheme === 'dark' ? '#333333' : '#ffffff',
+                      fillShadowGradientOpacity: 0.1,
+                    }}
+                    bezier={false}
+                    style={{ borderRadius: 16, marginVertical: 8 }}
+                  />
+                </View>
                 <ThemedText style={{ textAlign: 'center', marginTop: 10 }}>
                   ไนโตรเจนไดออกไซด์ล่าสุด: <ThemedText style={{ fontWeight: 'bold', color: getNitrogenDioxideLineColor(latestNitrogenDioxide) }}>{latestNitrogenDioxide} ppm</ThemedText>
                 </ThemedText>
@@ -641,6 +1449,24 @@ const styles = StyleSheet.create({
     gap: 8,
     marginTop: 30,
     fontSize: 24,
+  },
+  menuDesktopRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    margin: 10,
+    gap: 30,
+    marginBottom: 10,
+    width: '100%',
+  },
+  menuDesktop: {
+    flex: 1,
+    borderWidth: 1,
+    borderRadius: 20,
+    height: 450,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   menuMobile: {
     borderWidth: 1,
