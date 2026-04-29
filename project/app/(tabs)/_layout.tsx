@@ -79,29 +79,6 @@ export default function TabLayout() {
               </ThemedText>
             </Pressable>
           </Link>
-
-          <Link href="/setting" asChild>
-            <Pressable
-              style={{
-                ...styles.sidebarItem,
-                ...(isActive('setting') ? styles.activeItem : {}),
-              }}
-            >
-              <Feather
-                name="settings"
-                size={20}
-                color={isActive('setting') ? '#007AFF' : (colorScheme === 'dark' ? '#fff' : '#3b3b3b')}
-              />
-              <ThemedText
-                style={{
-                  color: isActive('setting') ? '#007AFF' : (colorScheme === 'dark' ? '#fff' : '#3b3b3b'),
-                  ...(isActive('setting') ? styles.activeText : {}),
-                }}
-              >
-                Settings
-              </ThemedText>
-            </Pressable>
-          </Link>
         </View>
 
         <View style={styles.mainContent}>
@@ -167,24 +144,6 @@ export default function TabLayout() {
           ),
           headerTitleAlign: 'center',
           tabBarIcon: ({ color }) => <AntDesign name="bar-chart" size={28} color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="setting"
-        options={{
-          title: 'Settings',
-          headerTitle: () => (
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-              <Image
-                source={require('@/assets/images/bu-removebg-preview.png')}
-                style={{ width: 24, height: 24 }}
-              />
-              <ThemedText style={{ color: colorScheme === 'dark' ? '#ffffff' : '#000000', fontWeight: 'bold' }}>Air</ThemedText>
-              <ThemedText style={{ color: '#FF6984', fontWeight: 'bold' }}>Quality</ThemedText>
-            </View>
-          ),
-          headerTitleAlign: 'center',
-          tabBarIcon: ({ color }) => <Feather name="settings" size={28} color={color} />,
         }}
       />
     </Tabs>
