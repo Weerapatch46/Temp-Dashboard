@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, useWindowDimensions, View, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { StyleSheet, useWindowDimensions, View, TouchableOpacity, Image, ScrollView, useColorScheme } from 'react-native';
 import { ThemedText } from '@/components/themed-text';
 import { Collapsible } from '@/components/ui/collapsible';
 import { AntDesign } from '@expo/vector-icons';
@@ -7,6 +7,7 @@ import { AntDesign } from '@expo/vector-icons';
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
   const isDesktop = width >= 768;
+  const colorScheme = useColorScheme();
   const [isOpenTemperature, setIsOpenTemperature] = React.useState(false);
   const [isOpenPressure, setIsOpenPressure] = React.useState(false);
   const [isOpenCarbon, setIsOpenCarbon] = React.useState(false);
@@ -19,12 +20,322 @@ export default function HomeScreen() {
   return (
     <ScrollView style={styles.container}>
       {isDesktop ? (
-        <ThemedText type="title" style={styles.titleContainerDesktop}>
-          Content Data for Desktop
-        </ThemedText>
+        <View style={{ flex: 1 }}>
+
+          <View style={styles.menuDesktopRow}>
+            <View style={[styles.menuDesktop,
+            { backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff', borderColor: colorScheme === 'dark' ? '#555555' : '#d9d9d9' }
+            ]}>
+              <Image
+                source={require('@/assets/images/temperature.png')}
+                style={{ width: 40, height: 40, margin: 10 }}
+              />
+              <ThemedText style={{ fontSize: 24, fontWeight: 'bold', marginTop: 10, marginLeft: 20 }}>
+                Temperature
+              </ThemedText>
+              <ThemedText style={{ fontSize: 16, fontWeight: 'bold', marginTop: 10, marginLeft: 22, color: '#080bb4' }}>
+                ระดับต่ำ: (Low)
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'normal', marginLeft: 22, marginRight: 10 }}>
+                อุณหภูมิในช่วงนี้มีค่าต่ำกว่าปกติ เช่น ในกรณีที่อุณหภูมิต่ำกว่า 20°C อาจส่งผลให้ระบบบางอย่างทำงานได้ไม่เต็มประสิทธิภาพ หรือส่งผลกระทบต่อร่างกาย เช่น หนาวสั่น หรือเป็นไข้
+              </ThemedText>
+              <ThemedText style={{ fontSize: 16, fontWeight: 'bold', marginTop: 10, marginLeft: 22, color: '#058625' }}>
+                ระดับปกติ (Normal)
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'normal', marginLeft: 22, marginRight: 10 }}>
+                ช่วงอุณหภูมิที่เหมาะสม อยู่ระหว่างประมาณ 20°C - 30°C เป็นช่วงที่ปลอดภัย เหมาะสำหรับการทำงานของเครื่องจักรและสภาพร่างกายของมนุษย์
+              </ThemedText>
+              <ThemedText style={{ fontSize: 16, fontWeight: 'bold', marginTop: 10, marginLeft: 22, color: '#ff0000' }}>
+                ระดับสูง (High)
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'normal', marginLeft: 22, marginRight: 10 }}>
+                เมื่ออุณหภูมิเกินกว่า 30°C จะถือว่าสูง อาจก่อให้เกิดความร้อนเกินในระบบอุปกรณ์ หรือเสี่ยงต่อปัญหาสุขภาพ เช่น โรคลมแดด หรือการขาดน้ำ
+              </ThemedText>
+            </View>
+
+            <View style={[styles.menuDesktop,
+            { backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff', borderColor: colorScheme === 'dark' ? '#555555' : '#d9d9d9' }
+            ]}>
+              <Image
+                source={require('@/assets/images/pressure-gauge.png')}
+                style={{ width: 40, height: 40, margin: 10 }}
+              />
+              <ThemedText style={{ fontSize: 24, fontWeight: 'bold', marginTop: 10, marginLeft: 20 }}>
+                Pressure
+              </ThemedText>
+              <ThemedText style={{ fontSize: 16, fontWeight: 'bold', marginTop: 10, marginLeft: 22, color: '#080bb4' }}>
+                ระดับต่ำ: (Low)
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'bold', marginLeft: 22, marginRight: 10 }}>
+                ความดันน้อยกว่า 1000 hPa
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'normal', marginLeft: 22, marginRight: 10 }}>
+                อาจบ่งบอกถึงพายุหรือฝนตก ความดันต่ำอาจทำให้รู้สึกเหนื่อยหรือปวดหัวในบางคน และอาจส่งผลต่อระบบการบินหรือเครื่องจักร
+              </ThemedText>
+              <ThemedText style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 22, marginTop: 10, color: '#058625' }}>
+                ระดับปกติ (Normal)
+              </ThemedText>
+              <ThemedText style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 22 }}>
+                ความดันอยู่ระหว่าง 1000 - 1020 hPa
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'normal', marginLeft: 22, marginRight: 10 }}>
+                เป็นช่วงที่เหมาะสมต่อกิจกรรมทั่วไป สภาพอากาศปกติ อากาศแจ่มใส เครื่องจักรทำงานได้ดี
+              </ThemedText>
+              <ThemedText style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 22, marginTop: 10, color: '#ff0000' }}>
+                ระดับสูง (High)
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'bold', marginLeft: 22, marginRight: 10 }}>
+                ความดันมากกว่า 1020 hPa
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'normal', marginLeft: 22, marginRight: 10 }}>
+                อาจสัมพันธ์กับอากาศแห้ง ท้องฟ้าแจ่มใส แต่ถ้าสูงมากเกินไปอาจส่งผลต่อผู้มีปัญหาด้านความดันโลหิตหรือความรู้สึกไม่สบายในที่สูง
+              </ThemedText>
+            </View>
+
+            <View style={[styles.menuDesktop,
+            { backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff', borderColor: colorScheme === 'dark' ? '#555555' : '#d9d9d9' }
+            ]}>
+              <Image
+                source={require('@/assets/images/carbon-dioxide.png')}
+                style={{ width: 40, height: 40, margin: 10 }}
+              />
+              <ThemedText style={{ fontSize: 24, fontWeight: 'bold', marginTop: 10, marginLeft: 20 }}>
+                Carbon Dioxide
+              </ThemedText>
+              <ThemedText style={{ fontSize: 16, fontWeight: 'bold', marginTop: 10, marginLeft: 22, color: '#080bb4' }}>
+                ระดับต่ำ: (Low)
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'bold', marginLeft: 22, marginRight: 10 }}>
+                ต่ำกว่า 400 ppm
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'normal', marginLeft: 22, marginRight: 10 }}>
+                อากาศบริสุทธิ์ สดชื่น เหมาะกับการหายใจและการทำงานในระยะยาว
+              </ThemedText>
+              <ThemedText style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 22, marginTop: 10, color: '#058625' }}>
+                ระดับปกติ (Normal)
+              </ThemedText>
+              <ThemedText style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 22 }}>
+                400 - 1000 ppm
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'normal', marginLeft: 22, marginRight: 10 }}>
+                อยู่ในช่วงปกติสำหรับพื้นที่ปิด เช่น ห้องเรียน ห้องประชุม ไม่ส่งผลกระทบต่อสุขภาพ
+              </ThemedText>
+              <ThemedText style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 22, marginTop: 10, color: '#ff0000' }}>
+                ระดับสูง (High)
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'bold', marginLeft: 22, marginRight: 10 }}>
+                เกิน 1000 ppm
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'normal', marginLeft: 22, marginRight: 10 }}>
+                ควรระบายอากาศ อาจทำให้รู้สึกง่วง เวียนหัว สมาธิลดลง และส่งผลต่อสุขภาพในระยะยาว
+              </ThemedText>
+            </View>
+          </View>
+
+          <View style={styles.menuDesktopRow}>
+            <View style={[styles.menuDesktop,
+            { backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff', borderColor: colorScheme === 'dark' ? '#555555' : '#d9d9d9' }
+            ]}>
+              <Image
+                source={require('@/assets/images/methane.png')}
+                style={{ width: 40, height: 40, margin: 10 }}
+              />
+              <ThemedText style={{ fontSize: 24, fontWeight: 'bold', marginTop: 10, marginLeft: 20 }}>
+                Methane
+              </ThemedText>
+              <ThemedText style={{ fontSize: 16, fontWeight: 'bold', marginTop: 10, marginLeft: 22, color: '#080bb4' }}>
+                ระดับต่ำ: (Low)
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'bold', marginLeft: 22, marginRight: 10 }}>
+                ต่ำกว่า 1000 ppm
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'normal', marginLeft: 22, marginRight: 10 }}>
+                ปลอดภัย ไม่มีความเสี่ยงต่อการติดไฟหรือระเบิด อากาศถือว่าปลอดโปร่ง
+              </ThemedText>
+              <ThemedText style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 22, marginTop: 10, color: '#058625' }}>
+                ระดับปกติ (Normal)
+              </ThemedText>
+              <ThemedText style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 22 }}>
+                1000 - 5000 ppm
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'normal', marginLeft: 22, marginRight: 10 }}>
+                เริ่มมีการสะสมของก๊าซ อาจเกิดจากการรั่วไหลเล็กน้อย ยังไม่อันตรายแต่ควรติดตาม
+              </ThemedText>
+              <ThemedText style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 22, marginTop: 10, color: '#ff0000' }}>
+                ระดับสูง (High)
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'bold', marginLeft: 22, marginRight: 10 }}>
+                มากกว่า 5000 ppm หรือเข้าใกล้ 5% (LEL)
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'normal', marginLeft: 22, marginRight: 10 }}>
+                อันตราย! เสี่ยงต่อการระเบิดหากมีแหล่งจุดไฟ ควรระบายอากาศทันทีและตรวจสอบแหล่งรั่ว
+              </ThemedText>
+            </View>
+
+            <View style={[styles.menuDesktop,
+            { backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff', borderColor: colorScheme === 'dark' ? '#555555' : '#d9d9d9' }
+            ]}>
+              <Image
+                source={require('@/assets/images/ethanol.png')}
+                style={{ width: 40, height: 40, margin: 10 }}
+              />
+              <ThemedText style={{ fontSize: 24, fontWeight: 'bold', marginTop: 10, marginLeft: 20 }}>
+                Ethanol
+              </ThemedText>
+              <ThemedText style={{ fontSize: 16, fontWeight: 'bold', marginTop: 10, marginLeft: 22, color: '#080bb4' }}>
+                ระดับต่ำ: (Low)
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'bold', marginLeft: 22, marginRight: 10 }}>
+                ต่ำกว่า 100 ppm
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'normal', marginLeft: 22, marginRight: 10 }}>
+                ปลอดภัย ไม่มีความเสี่ยงต่อสุขภาพ และไม่เป็นอันตรายต่อการใช้งานทั่วไป
+              </ThemedText>
+              <ThemedText style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 22, marginTop: 10, color: '#058625' }}>
+                ระดับปกติ (Normal)
+              </ThemedText>
+              <ThemedText style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 22 }}>
+                100 - 500 ppm
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'normal', marginLeft: 22, marginRight: 10 }}>
+                สามารถพบได้ในบางสภาพแวดล้อม เช่น ห้องทดลองหรือโรงงานผลิต มีความเสี่ยงต่ำต่อสุขภาพ
+              </ThemedText>
+              <ThemedText style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 22, marginTop: 10, color: '#ff0000' }}>
+                ระดับสูง (High)
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'bold', marginLeft: 22, marginRight: 10 }}>
+                มากกว่า 500 ppm
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'normal', marginLeft: 22, marginRight: 10 }}>
+                ควรระวัง! ความเข้มข้นสูงเกินไปอาจทำให้เกิดผลกระทบต่อสุขภาพ เช่น อาการเวียนหัว หายใจไม่สะดวก หรือเสี่ยงต่อการเกิดเพลิงไหม้หากมีแหล่งจุดติดไฟ
+              </ThemedText>
+            </View>
+
+            <View style={[styles.menuDesktop,
+            { backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff', borderColor: colorScheme === 'dark' ? '#555555' : '#d9d9d9' }
+            ]}>
+              <Image
+                source={require('@/assets/images/dioxide.png')}
+                style={{ width: 40, height: 40, margin: 10 }}
+              />
+              <ThemedText style={{ fontSize: 24, fontWeight: 'bold', marginTop: 10, marginLeft: 20 }}>
+                Nitrogen
+              </ThemedText>
+              <ThemedText style={{ fontSize: 16, fontWeight: 'bold', marginTop: 10, marginLeft: 22, color: '#080bb4' }}>
+                ระดับต่ำ: (Low)
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'bold', marginLeft: 22, marginRight: 10 }}>
+                ต่ำกว่า 1000 ppm
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'normal', marginLeft: 22, marginRight: 10 }}>
+                ปลอดภัยในพื้นที่ที่มีการระบายอากาศดี ไม่มีผลกระทบต่อสุขภาพ
+              </ThemedText>
+              <ThemedText style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 22, marginTop: 10, color: '#058625' }}>
+                ระดับปกติ (Normal)
+              </ThemedText>
+              <ThemedText style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 22 }}>
+                1000 - 5000 ppm
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'normal', marginLeft: 22, marginRight: 10 }}>
+                ความเข้มข้นของไนโตรเจนในอากาศปกติ ส่วนใหญ่ไม่ส่งผลกระทบต่อสุขภาพและการทำงาน
+              </ThemedText>
+              <ThemedText style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 22, marginTop: 10, color: '#ff0000' }}>
+                ระดับสูง (High)
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'bold', marginLeft: 22, marginRight: 10 }}>
+                มากกว่า 5000 ppm
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'normal', marginLeft: 22, marginRight: 10 }}>
+                อาจทำให้การหายใจลำบากและเสี่ยงต่อการขาดออกซิเจนในพื้นที่ที่มีไนโตรเจนสูง ควรระมัดระวังการทำงานในพื้นที่ปิด
+              </ThemedText>
+            </View>
+          </View>
+
+          <View style={styles.menuDesktopRow}>
+            <View style={[styles.menuDesktop,
+            { backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff', borderColor: colorScheme === 'dark' ? '#555555' : '#d9d9d9' }
+            ]}>
+              <Image
+                source={require('@/assets/images/ammonia.png')}
+                style={{ width: 40, height: 40, margin: 10 }}
+              />
+              <ThemedText style={{ fontSize: 24, fontWeight: 'bold', marginTop: 10, marginLeft: 20 }}>
+                Ammonia
+              </ThemedText>
+              <ThemedText style={{ fontSize: 16, fontWeight: 'bold', marginTop: 10, marginLeft: 22, color: '#080bb4' }}>
+                ระดับต่ำ: (Low)
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'bold', marginLeft: 22, marginRight: 10 }}>
+                ต่ำกว่า 25 ppm
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'normal', marginLeft: 22, marginRight: 10 }}>
+                ปลอดภัย ไม่มีผลกระทบต่อสุขภาพ การทำงานหรือการหายใจในพื้นที่นี้ถือว่าปลอดภัย
+              </ThemedText>
+              <ThemedText style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 22, marginTop: 10, color: '#058625' }}>
+                ระดับปกติ (Normal)
+              </ThemedText>
+              <ThemedText style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 22 }}>
+                25 - 50 ppm
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'normal', marginLeft: 22, marginRight: 10 }}>
+                ระดับแอมโมเนียที่ไม่เป็นอันตรายในพื้นที่ที่มีการระบายอากาศดี อาจมีการระคายเคืองเล็กน้อย
+              </ThemedText>
+              <ThemedText style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 22, marginTop: 10, color: '#ff0000' }}>
+                ระดับสูง (High)
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'bold', marginLeft: 22, marginRight: 10 }}>
+                มากกว่า 50 ppm
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'normal', marginLeft: 22, marginRight: 10 }}>
+                ระดับอันตราย! การหายใจในพื้นที่ที่มีระดับแอมโมเนียสูงอาจทำให้เกิดการระคายเคืองที่ระบบทางเดินหายใจ ตา และผิวหนัง ควรระมัดระวังและหลีกเลี่ยง
+              </ThemedText>
+            </View>
+
+            <View style={[styles.menuDesktop,
+            { backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff', borderColor: colorScheme === 'dark' ? '#555555' : '#d9d9d9' }
+            ]}>
+              <Image
+                source={require('@/assets/images/atmospheric-chemistry.png')}
+                style={{ width: 40, height: 40, margin: 10 }}
+              />
+              <ThemedText style={{ fontSize: 24, fontWeight: 'bold', marginTop: 10, marginLeft: 20 }}>
+                Nitrogen dioxide
+              </ThemedText>
+              <ThemedText style={{ fontSize: 16, fontWeight: 'bold', marginTop: 10, marginLeft: 22, color: '#080bb4' }}>
+                ระดับต่ำ: (Low)
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'bold', marginLeft: 22, marginRight: 10 }}>
+                ต่ำกว่า 50 ppb
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'normal', marginLeft: 22, marginRight: 10 }}>
+                ปลอดภัยสำหรับการหายใจ ไม่มีผลกระทบต่อสุขภาพในระยะยาว
+              </ThemedText>
+              <ThemedText style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 22, marginTop: 10, color: '#058625' }}>
+                ระดับปกติ (Normal)
+              </ThemedText>
+              <ThemedText style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 22 }}>
+                50 - 100 ppb
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'normal', marginLeft: 22, marginRight: 10 }}>
+                ความเข้มข้นปกติในอากาศที่อาจพบได้ในพื้นที่ที่มีการจราจรหรือในเมือง
+              </ThemedText>
+              <ThemedText style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 22, marginTop: 10, color: '#ff0000' }}>
+                ระดับสูง (High)
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'bold', marginLeft: 22, marginRight: 10 }}>
+                มากกว่า 100 ppb
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: 'normal', marginLeft: 22, marginRight: 10 }}>
+                อาจเป็นอันตรายต่อระบบทางเดินหายใจและส่งผลกระทบต่อสุขภาพในระยะยาว เช่น โรคหอบหืดและการหายใจลำบาก
+              </ThemedText>
+            </View>
+            <View style={{ flex: 1 }} />
+          </View>
+
+        </View>
       ) : (
         <>
-        {/* Temperature */}
+          {/* Temperature */}
           <View style={[styles.menuMobile, { marginTop: 10 }]}>
             <TouchableOpacity
               style={styles.menuMobileButton}
@@ -58,7 +369,7 @@ export default function HomeScreen() {
             )}
           </View>
 
-        {/* Pressure */}
+          {/* Pressure */}
           <View style={[styles.menuMobile, { marginTop: 10 }]}>
             <TouchableOpacity
               style={styles.menuMobileButton}
@@ -339,6 +650,24 @@ const styles = StyleSheet.create({
     gap: 8,
     marginTop: 30,
     fontSize: 24,
+  },
+  menuDesktopRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    margin: 10,
+    gap: 30,
+    marginBottom: 10,
+    width: '100%',
+  },
+  menuDesktop: {
+    flex: 1,
+    borderWidth: 1,
+    borderRadius: 20,
+    height: 450,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   menuMobile: {
     borderWidth: 1,

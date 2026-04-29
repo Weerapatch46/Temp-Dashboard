@@ -127,6 +127,11 @@ export default function TabLayout() {
         headerShown: true,
         headerTitleAlign: 'center',
         tabBarActiveTintColor: '#007AFF',
+        tabBarStyle: {
+          height: 100,
+          paddingBottom: 10,
+          paddingTop: 10,
+        }
       }}>
       <Tabs.Screen
         name="data"
