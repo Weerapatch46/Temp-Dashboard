@@ -87,10 +87,8 @@ def mock_sensor():
         "device_id": "esp32-01",
         "temperature": round(random.uniform(15, 50), 2),
         "humidity": round(random.uniform(30, 70), 2),
-        "co2": round(random.uniform(300, 800), 2),
-        "methane": round(random.uniform(0, 2), 3),
-        "ethanol": round(random.uniform(0, 1), 3),
-        "no2": round(random.uniform(0, 2), 3),
+        "alcohol": round(random.uniform(300, 800), 2),
+        "air_quality": round(random.uniform(0, 2), 3),
         "timestamp": str(datetime.datetime.utcnow())
     }
 
