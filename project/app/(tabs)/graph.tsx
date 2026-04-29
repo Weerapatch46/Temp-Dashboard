@@ -220,7 +220,7 @@ export default function GraphScreen() {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={[styles.container, { backgroundColor: colorScheme === 'dark' ? '#1c1e1f' : '#f5f5f5' }]}>
       {isDesktop ? (
         <View style={{ flex: 1 }}>
           <View style={styles.menuDesktopRow}>
@@ -836,7 +836,9 @@ export default function GraphScreen() {
       ) : (
         <>
           {/* Graph for Temperature */}
-          <View style={[styles.menuMobile, { marginTop: 10 }]}>
+          <View style={[styles.menuMobile,
+          { marginTop: 10, backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff', borderColor: colorScheme === 'dark' ? '#555555' : '#d9d9d9' }
+          ]}>
             <TouchableOpacity
               style={styles.menuMobileButton}
               onPress={() => setIsOpenTemperature(!isOpenTemperature)}
@@ -910,7 +912,9 @@ export default function GraphScreen() {
           </View>
 
           {/* Graph for Pressure */}
-          <View style={[styles.menuMobile, { marginTop: 10 }]}>
+          <View style={[styles.menuMobile,
+          { marginTop: 10, backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff', borderColor: colorScheme === 'dark' ? '#555555' : '#d9d9d9' }
+          ]}>
             <TouchableOpacity
               style={styles.menuMobileButton}
               onPress={() => setIsOpenPressure(!isOpenPressure)}
@@ -984,7 +988,9 @@ export default function GraphScreen() {
           </View>
 
           {/* Graph Carbon Dioxide */}
-          <View style={[styles.menuMobile, { marginTop: 10 }]}>
+          <View style={[styles.menuMobile,
+          { marginTop: 10, backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff', borderColor: colorScheme === 'dark' ? '#555555' : '#d9d9d9' }
+          ]}>
             <TouchableOpacity
               style={styles.menuMobileButton}
               onPress={() => setIsOpenCarbonDioxide(!isOpenCarbonDioxide)}
@@ -1058,7 +1064,9 @@ export default function GraphScreen() {
           </View>
 
           {/* Graph Methane */}
-          <View style={[styles.menuMobile, { marginTop: 10 }]}>
+          <View style={[styles.menuMobile,
+          { marginTop: 10, backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff', borderColor: colorScheme === 'dark' ? '#555555' : '#d9d9d9' }
+          ]}>
             <TouchableOpacity
               style={styles.menuMobileButton}
               onPress={() => setIsOpenMethane(!isOpenMethane)}
@@ -1132,7 +1140,9 @@ export default function GraphScreen() {
           </View>
 
           {/* Graph Ethanol */}
-          <View style={[styles.menuMobile, { marginTop: 10 }]}>
+          <View style={[styles.menuMobile,
+          { marginTop: 10, backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff', borderColor: colorScheme === 'dark' ? '#555555' : '#d9d9d9' }
+          ]}>
             <TouchableOpacity
               style={styles.menuMobileButton}
               onPress={() => setIsOpenEthanol(!isOpenEthanol)}
@@ -1206,7 +1216,9 @@ export default function GraphScreen() {
           </View>
 
           {/* Graph Nitrogen */}
-          <View style={[styles.menuMobile, { marginTop: 10 }]}>
+          <View style={[styles.menuMobile,
+          { marginTop: 10, backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff', borderColor: colorScheme === 'dark' ? '#555555' : '#d9d9d9' }
+          ]}>
             <TouchableOpacity
               style={styles.menuMobileButton}
               onPress={() => setIsOpenNitrogen(!isOpenNitrogen)}
@@ -1280,7 +1292,9 @@ export default function GraphScreen() {
           </View>
 
           {/* Graph Ammonia */}
-          <View style={[styles.menuMobile, { marginTop: 10 }]}>
+          <View style={[styles.menuMobile,
+          { marginTop: 10, backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff', borderColor: colorScheme === 'dark' ? '#555555' : '#d9d9d9' }
+          ]}>
             <TouchableOpacity
               style={styles.menuMobileButton}
               onPress={() => setIsOpenAmmonia(!isOpenAmmonia)}
@@ -1354,7 +1368,9 @@ export default function GraphScreen() {
           </View>
 
           {/* Graph Nitrogen Dioxide */}
-          <View style={[styles.menuMobile, { marginTop: 10 }]}>
+          <View style={[styles.menuMobile,
+          { marginTop: 10, backgroundColor: colorScheme === 'dark' ? '#333333' : '#ffffff', borderColor: colorScheme === 'dark' ? '#555555' : '#d9d9d9' }
+          ]}>
             <TouchableOpacity
               style={styles.menuMobileButton}
               onPress={() => setIsOpenNitrogenDioxide(!isOpenNitrogenDioxide)}
